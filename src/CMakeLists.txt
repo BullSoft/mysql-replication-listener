@@ -9,13 +9,13 @@ set(replication_sources
 
 # Configure for building static library
 add_library(replication_static STATIC ${replication_sources})
-target_link_libraries(replication_static crypto ${Boost_LIBRARIES})
+target_link_libraries(replication_static crypto pthread)
 set_target_properties(replication_static PROPERTIES
   OUTPUT_NAME "replication")
 
 # Configure for building shared library
 add_library(replication_shared SHARED ${replication_sources})
-target_link_libraries(replication_shared crypto ${Boost_LIBRARIES})
+target_link_libraries(replication_shared crypto pthread)
 
 set_target_properties(replication_shared PROPERTIES
   VERSION 0.1 SOVERSION 1

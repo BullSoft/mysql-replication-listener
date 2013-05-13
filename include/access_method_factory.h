@@ -25,11 +25,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 
 namespace mysql {
 namespace system {
-Binary_log_driver *create_transport(const char *url);
-Binary_log_driver *parse_mysql_url(char *url, const char
-                                   *mysql_access_method);
-Binary_log_driver *parse_file_url(char *url, const char
-                                  *file_access_method);
+    Binary_log_driver *create_transport(const char *url);
+    Binary_log_driver *parse_mysql_url(char *url,
+                                       const char *mysql_access_method);
+    Binary_log_driver *parse_file_url(char *url,
+                                      const char *file_access_method);
 }
 }
 

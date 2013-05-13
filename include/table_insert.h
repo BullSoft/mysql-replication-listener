@@ -26,7 +26,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  */
 
 #ifndef _TABLE_INSERT_H
-#define	_TABLE_INSERT_H
+#define _TABLE_INSERT_H
 
 #include <string>
 #include "binlog_api.h"

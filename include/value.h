@@ -23,7 +23,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 
 #include <stdint.h>
 #include "protocol.h"
-#include <boost/any.hpp>
 #include <iostream>
 
 using namespace mysql;

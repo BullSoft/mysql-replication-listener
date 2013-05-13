@@ -18,34 +18,38 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 02110-1301  USA
 */
 #include <vector>
+#include <stdexcept>
 
 #include "row_of_fields.h"
-#include <stdexcept>
-#include <boost/foreach.hpp>
 #include "value.h"
 
 using namespace mysql;
 
 Row_of_fields& Row_of_fields::operator=(const Row_of_fields &right)
 {
-  if (size() != right.size())
-    throw std::length_error("Row dimension doesn't match.");
+  if (size() != right.size()) {
+      this->resize(right.size());
+      //throw std::length_error("Row dimension doesn't match.");
+  }
   int i= 0;
-  BOOST_FOREACH(Value value, right)
+  // Because the parameter passed in is (const Row_of_fields &),
+  // begin() will return a const_iterator
+  for(std::vector<Value>::const_iterator it=right.begin(); it != right.end(); it++)
   {
-    this->assign(++i, value);
+    this->assign(++i, *it);
   }
   return *this;
 }
 
 Row_of_fields& Row_of_fields::operator=(Row_of_fields &right)
 {
-  if (size() != right.size())
-    throw std::length_error("Row dimension doesn't match.");
+  if (size() != right.size()) {
+      this->resize(right.size());
+  }
   int i= 0;
-  BOOST_FOREACH(Value value, right)
+  for(std::vector<Value>::iterator it=right.begin(); it != right.end(); it++)
   {
-    this->assign(++i, value);
+    this->assign(++i, *it);
   }
   return *this;
 }

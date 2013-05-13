@@ -22,9 +22,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 
 #include <list>
 #include <stdint.h>
-#include <boost/asio.hpp>
-#include <boost/function.hpp>
 #include <vector>
+#include <string>
 
 namespace mysql
 {

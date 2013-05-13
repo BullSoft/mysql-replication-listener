@@ -19,7 +19,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 */
 
 #ifndef _BINLOG_DRIVER_H
-#define	_BINLOG_DRIVER_H
+#define _BINLOG_DRIVER_H
+
 #include "binlog_event.h"
 #include "protocol.h"
 

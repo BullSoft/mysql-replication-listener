@@ -14,16 +14,9 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
 include_directories(include)
 link_directories(${PROJECT_BINARY_DIR}/lib)
 
-# ---------- Find Boost Headers/Libraries -----------------------
-#SET(Boost_LIBRARY_DIRS "/home/shangyc/local/boost/lib/")
-#SET(Boost_INCLUDE_DIR "/home/shangyc/local/boost/include/")
-SET(Boost_DEBUG FALSE)
-SET(Boost_FIND_REQUIRED TRUE)
-SET(Boost_FIND_QUIETLY FALSE)
-SET(Boost_USE_STATIC_LIBS FALSE)
-FIND_PACKAGE(Boost 1.39 REQUIRED system thread)
-LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
-INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
+# TODO: order: find asio -> allow to define asio directory -> use include/asio
+# For ASIO headers
+INCLUDE_DIRECTORIES(include/asio)
 
 # --------- Find crypt ------------------------------------------
 FIND_LIBRARY(LIB_CRYPTO crypto /opt/local/lib /opt/lib /usr/lib /usr/local/lib)
@@ -33,5 +26,5 @@ add_subdirectory(src)
 include(InstallRequiredSystemLibraries)
 
 # installation configuration
-install(DIRECTORY include DESTINATION . FILES_MATCHING PATTERN "*.h")
+install(DIRECTORY include DESTINATION /usr FILES_MATCHING PATTERN "*.h")
 

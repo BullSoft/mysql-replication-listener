@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 #include "access_method_factory.h"
 #include "tcp_driver.h"
 #include "file_driver.h"
+#include <unistd.h>
 
 using mysql::system::Binary_log_driver;
 using mysql::system::Binlog_tcp_driver;
@@ -83,6 +84,9 @@ static Binary_log_driver *parse_mysql_url(const char *body, size_t len)
 
 static Binary_log_driver *parse_file_url(const char *body, size_t length)
 {
+  if (access(body, R_OK) == 0)
+    return new Binlog_file_driver(body);
+
   /* Find the beginning of the file name */
   if (strncmp(body, "//", 2) != 0)
     return 0;
@@ -117,8 +121,13 @@ Binary_log_driver *
 mysql::system::create_transport(const char *url)
 {
   const char *pfx = strchr(url, ':');
-  if (pfx == 0)
-    return NULL;
+  if (pfx == 0) {
+    // file can be not started with "file://" too
+    if (access(url, R_OK) == 0)
+      return (*url_parser[1].parser)(url, strlen(url));
+    else
+      return NULL;
+  }
   for (int i = 0 ; i < sizeof(url_parser)/sizeof(*url_parser) ; ++i)
   {
     const char *proto = url_parser[i].protocol;

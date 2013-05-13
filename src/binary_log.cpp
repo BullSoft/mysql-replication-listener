@@ -21,10 +21,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 #include <list>
 
 #include "binlog_api.h"
-#include <boost/foreach.hpp>
 
 using namespace mysql;
 using namespace mysql::system;
+
 namespace mysql
 {
 Binary_log::Binary_log(Binary_log_driver *drv) : m_binlog_position(4), m_binlog_file("")
@@ -66,8 +66,11 @@ int Binary_log::wait_for_next_event(mysql::Binary_log_event **event_ptr)
     m_binlog_position= event->header()->next_position;
     mysql::Content_handler *handler;
 
-    BOOST_FOREACH(handler, m_content_handlers)
+    for (std::list<Content_handler *>::iterator it = m_content_handlers.begin();
+            it != m_content_handlers.end();
+            it++) 
     {
+      handler = *it;
       if (event)
       {
         handler->set_injection_queue(&reinjection_queue);

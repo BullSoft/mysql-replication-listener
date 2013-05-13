@@ -36,7 +36,7 @@ void Result_set::digest_row_set()
   unsigned long packet_length;
   unsigned char packet_no= 1;
   m_current_state= RESULT_HEADER;
-  boost::asio::streambuf resultbuff;
+  asio::streambuf resultbuff;
   std::istream response_stream(&resultbuff);
   unsigned field_count= 0;
   try {
@@ -91,7 +91,7 @@ void Result_set::digest_row_set()
          continue;
     }
   } while (m_current_state != EOF_PACKET);
-  } catch(boost::system::system_error e)
+  } catch(asio::system_error e)
   {
     // TODO log error
     m_field_count= 0;

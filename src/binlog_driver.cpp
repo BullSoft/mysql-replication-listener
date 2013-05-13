@@ -23,7 +23,7 @@
 namespace mysql { namespace system {
 
 /*
-Binary_log_event* Binary_log_driver::parse_event(boost::asio::streambuf
+Binary_log_event* Binary_log_driver::parse_event(asio::streambuf
                                                  &sbuff, Log_event_header
                                                  *header)
                                                  */

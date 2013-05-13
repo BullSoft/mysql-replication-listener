@@ -23,6 +23,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 #include <vector>
 #include <iostream>
 #include "value.h"
+
 using namespace mysql;
 
 namespace mysql

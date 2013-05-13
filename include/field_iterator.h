@@ -19,11 +19,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 */
 
 #ifndef _FIELD_ITERATOR_H
-#define	_FIELD_ITERATOR_H
+#define _FIELD_ITERATOR_H
+#include <vector>
+
 #include "binlog_event.h"
 #include "value.h"
 #include "row_of_fields.h"
-#include <vector>
 
 using namespace mysql;
 

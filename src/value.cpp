@@ -18,8 +18,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 02110-1301  USA
 */
 #include "value.h"
-#include "binlog_event.h"
 #include <iomanip>
+#include "binlog_event.h"
 
 using namespace mysql;
 using namespace mysql::system;

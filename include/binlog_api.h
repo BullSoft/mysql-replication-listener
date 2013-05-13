@@ -22,12 +22,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 #define	_REPEVENT_H
 
 #include <iosfwd>
-#include <boost/iostreams/categories.hpp>
-#include <boost/iostreams/positioning.hpp>
-#include <boost/iostreams/concepts.hpp>
-#include <boost/asio.hpp>
-#include <boost/function.hpp>
-#include <boost/bind.hpp>
 #include <list>
 #include <cassert>
 #include "binlog_event.h"
@@ -52,11 +46,6 @@ enum Error_code {
   ERR_FAIL,                                     /* Unspecified failure */
   ERROR_CODE_COUNT
 };
-
-/**
- * Returns true if the event is consumed
- */
-typedef boost::function< bool (Binary_log_event *& )> Event_content_handler;
 
 class Dummy_driver : public system::Binary_log_driver
 {

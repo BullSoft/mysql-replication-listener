@@ -28,6 +28,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 
 #include <list>
 #include <stdint.h>
+#include <map>
+#include <utility>
 #include "binlog_event.h"
 #include "basic_content_handler.h"
 

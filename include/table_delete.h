@@ -26,7 +26,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  */
 
 #ifndef _TABLE_DELETE_H
-#define	_TABLE_DELETE_H
+#define _TABLE_DELETE_H
 #include <string>
 #include "binlog_api.h"
 

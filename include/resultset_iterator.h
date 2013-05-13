@@ -22,10 +22,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 #define	_RESULTSET_ITERATOR_H
 
 #include <iostream>
+#include <iterator>
+#include <asio.hpp>
 
-#include <boost/iterator/iterator_facade.hpp>
-
-#include <boost/asio.hpp>
 #include "value.h"
 #include "rowset.h"
 #include "row_of_fields.h"
@@ -108,9 +107,8 @@ private:
 
 template <class Iterator_value_type >
 class Result_set_iterator :
-  public boost::iterator_facade<Result_set_iterator<Iterator_value_type >,
-                                Iterator_value_type,
-                                boost::forward_traversal_tag >
+  public std::iterator<std::bidirectional_iterator_tag,
+                                Iterator_value_type>
 {
 public:
     Result_set_iterator() : m_feeder(0), m_current_row(-1)
@@ -122,8 +120,34 @@ public:
       increment();
     }
 
+    Iterator_value_type & operator*()
+    {
+        return m_feeder->m_rows[m_current_row];
+    }
+
+    Result_set_iterator & operator++()
+    {
+        increment();
+        return *this;
+    }
+
+    Result_set_iterator & operator++(int)
+    {
+        increment();
+        return *this;
+    }
+
+    bool operator!=(const Result_set_iterator& it)
+    {
+        return !equal(it);
+    }
+
+    bool operator==(const Result_set_iterator& it)
+    {
+        return equal(it);
+    }
+
  private:
-    friend class boost::iterator_core_access;
 
     void increment()
     {
@@ -165,7 +189,7 @@ public:
         return true;
     }
 
-    Iterator_value_type &dereference() const
+    Iterator_value_type & dereference() const
     {
         return m_feeder->m_rows[m_current_row];
     }

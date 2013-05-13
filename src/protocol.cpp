@@ -18,11 +18,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 02110-1301  USA
 */
 #include <stdint.h>
-#include <boost/array.hpp>
 #include <vector>
+#include <iostream>
 
 #include "protocol.h"
-#include <iostream>
+
 using namespace mysql;
 using namespace mysql::system;
 
@@ -33,9 +33,9 @@ int proto_read_package_header(tcp::socket *socket, unsigned long *packet_length,
   unsigned char buf[4];
 
   try {
-    boost::asio::read(*socket, boost::asio::buffer(buf, 4),
-                      boost::asio::transfer_at_least(4));
-  } catch (boost::system::system_error e)
+    asio::read(*socket, asio::buffer(buf, 4),
+                        asio::transfer_at_least(4));
+  } catch (asio::system_error e)
   {
     return 1;
   }
@@ -46,7 +46,7 @@ int proto_read_package_header(tcp::socket *socket, unsigned long *packet_length,
   return 0;
 }
 
-int proto_read_package_header(tcp::socket *socket, boost::asio::streambuf &buff, unsigned long *packet_length, unsigned char *packet_no)
+int proto_read_package_header(tcp::socket *socket, asio::streambuf &buff, unsigned long *packet_length, unsigned char *packet_no)
 {
   std::streamsize inbuff= buff.in_avail();
   if( inbuff < 0)
@@ -55,9 +55,9 @@ int proto_read_package_header(tcp::socket *socket, boost::asio::streambuf &buff,
   if (4 > inbuff)
   {
     try {
-      boost::asio::read(*socket, buff,
-                        boost::asio::transfer_at_least(4-inbuff));
-    } catch (boost::system::system_error e)
+      asio::read(*socket, buff,
+                        asio::transfer_at_least(4-inbuff));
+    } catch (asio::system_error e)
     {
       return 1;
     }
@@ -76,7 +76,7 @@ int proto_read_package_header(tcp::socket *socket, boost::asio::streambuf &buff,
 }
 
 
-int proto_get_one_package(tcp::socket *socket, boost::asio::streambuf &buff,
+int proto_get_one_package(tcp::socket *socket, asio::streambuf &buff,
                           uint8_t *packet_no)
 {
   unsigned long packet_length;
@@ -86,8 +86,8 @@ int proto_get_one_package(tcp::socket *socket, boost::asio::streambuf &buff,
   if (inbuffer < 0)
     inbuffer= 0;
   if (packet_length > inbuffer)
-    boost::asio::read(*socket, buff,
-                      boost::asio::transfer_at_least(packet_length-inbuffer));
+    asio::read(*socket, buff,
+                      asio::transfer_at_least(packet_length-inbuffer));
 
   return packet_length;
 }
