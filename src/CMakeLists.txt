@@ -9,6 +9,7 @@ set(replication_sources
 
 # Configure for building static library
 add_library(replication_static STATIC ${replication_sources})
+set_target_properties(replication_static PROPERTIES COMPILE_FLAGS -fPIC)
 target_link_libraries(replication_static crypto pthread)
 set_target_properties(replication_static PROPERTIES
   OUTPUT_NAME "replication")

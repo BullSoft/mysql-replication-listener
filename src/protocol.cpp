@@ -446,7 +446,7 @@ Row_event *proto_rows_event(std::istream &is, Log_event_header *header)
     bytes_read+=used_column_len;
 
   unsigned long row_len= header->event_length - bytes_read - LOG_EVENT_HEADER_SIZE + 1;
-  std::cout << "Bytes read: " << bytes_read << " Bytes expected: " << row_len << std::endl;
+  //std::cout << "Bytes read: " << bytes_read << " Bytes expected: " << row_len << std::endl;
   Protocol_chunk_vector proto_row(rev->row, row_len);
   is >> proto_row;
 
