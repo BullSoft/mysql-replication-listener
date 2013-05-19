@@ -33,7 +33,7 @@ namespace mysql {
 bool is_null(unsigned char *bitmap, int index);
 
 int lookup_metadata_field_size(enum mysql::system::enum_field_types field_type);
-uint32_t extract_metadata(const Table_map_event *map, int col_no);
+uint16_t extract_metadata(const Table_map_event *map, int col_no);
 
 template <class Iterator_value_type >
 class Row_event_iterator : public std::iterator<std::forward_iterator_tag,
@@ -88,7 +88,7 @@ size_t Row_event_iterator<Iterator_value_type>::fields(Iterator_value_type& fiel
   {
     ++row_field_col_index;
     unsigned int type= m_table_map->columns[col_no]&0xFF;
-    uint32_t metadata= extract_metadata(m_table_map, col_no);
+    uint16_t metadata= extract_metadata(m_table_map, col_no);
     mysql::Value val((enum mysql::system::enum_field_types)type,
                      metadata,
                      (const char *)&m_row_event->row[field_offset]);

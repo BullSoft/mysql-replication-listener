@@ -25,7 +25,7 @@ using namespace mysql;
 using namespace mysql::system;
 namespace mysql {
 
-int calc_field_size(unsigned char column_type, const unsigned char *field_ptr, uint32_t metadata)
+int calc_field_size(unsigned char column_type, const unsigned char *field_ptr, uint16_t metadata)
 {
   uint32_t length;
 
@@ -53,11 +53,10 @@ int calc_field_size(unsigned char column_type, const unsigned char *field_ptr, u
   case mysql::system::MYSQL_TYPE_ENUM:
   case mysql::system::MYSQL_TYPE_STRING:
   {
-    unsigned char type= metadata >> 8U;
-    if ((type == mysql::system::MYSQL_TYPE_SET) || (type == mysql::system::MYSQL_TYPE_ENUM))
-      length= metadata & 0x00ff;
-    else
-    {
+    unsigned char type = (metadata & 0x00ff);
+    if ((type == mysql::system::MYSQL_TYPE_SET) || (type == mysql::system::MYSQL_TYPE_ENUM)) {
+      length = (metadata >> 8U);
+    } else {
       /*
         We are reading the actual size from the master_data record
         because this field has the actual lengh stored in the first
@@ -109,8 +108,8 @@ int calc_field_size(unsigned char column_type, const unsigned char *field_ptr, u
       If from_bit_len is not 0, add 1 to the length to account for accurate
       number of bytes needed.
     */
-	uint32_t from_len= (metadata >> 8U) & 0x00ff;
-	uint32_t from_bit_len= metadata & 0x00ff;
+	uint16_t from_len= (metadata >> 8U) & 0x00ff;
+	uint16_t from_bit_len= metadata & 0x00ff;
     //DBUG_ASSERT(from_bit_len <= 7);
     length= from_len + ((from_bit_len > 0) ? 1 : 0);
     break;
@@ -207,18 +206,23 @@ char *Value::as_c_str(unsigned long &size) const
     size = 0;
     return NULL;
   }
+
+  if (m_size == 1) {
+      size = 0;
+      return const_cast<char *>(m_storage);
+  }
   /*
    Length encoded; First byte is length of string.
   */
 
-  int metadata_length= m_metadata > 255 ? 2 : 1;
+  int metadata_length = m_metadata > 255 ? 2 : 1;
 
   // std::cout << "m_size " << metadata_length << std::endl;
 
   /*
    Size is length of the character string; not of the entire storage
   */
-  size= m_size - metadata_length;
+  size = m_size - metadata_length;
 
   return const_cast<char *>(m_storage + metadata_length);
 }

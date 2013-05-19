@@ -41,7 +41,7 @@ namespace mysql {
  @return The size in bytes of a particular field
 */
 int calc_field_size(unsigned char column_type, const unsigned char *field_ptr,
-                    uint32_t metadata);
+                    uint16_t metadata);
 
 
 /**
@@ -53,12 +53,23 @@ int calc_field_size(unsigned char column_type, const unsigned char *field_ptr,
 class Value
 {
 public:
-    Value(enum system::enum_field_types type, uint32_t metadata, const char *storage) :
+    Value(enum system::enum_field_types type, uint16_t metadata, const char *storage) :
       m_type(type), m_storage(storage), m_metadata(metadata), m_is_null(false)
     {
       m_size = calc_field_size((unsigned char)type,
                               (const unsigned char*)storage,
                               metadata);
+      // metadata: 16bits, lower byte is real type, high byte is length
+      switch(type) {
+          case mysql::system::MYSQL_TYPE_SET:
+          case mysql::system::MYSQL_TYPE_ENUM:
+          case mysql::system::MYSQL_TYPE_STRING:
+          {
+            m_type     = (enum system::enum_field_types)(metadata & 0x00ff);
+            m_metadata = (metadata >> 8U);
+            break;
+          }
+      }
       //std::cout << "TYPE: " << type << " SIZE: " << m_size << std::endl;
     };
 
@@ -92,7 +103,7 @@ public:
      */
     size_t length() const { return m_size; }
     enum system::enum_field_types type() const { return m_type; }
-    uint32_t metadata() const { return m_metadata; }
+    uint16_t metadata() const { return m_metadata; }
 
     /**
      * Returns the integer representation of a storage of a pre-specified
@@ -146,7 +157,7 @@ private:
     enum system::enum_field_types m_type;
     size_t m_size;
     const char *m_storage;
-    uint32_t m_metadata;
+    uint16_t m_metadata;
     bool m_is_null;
 };
 
