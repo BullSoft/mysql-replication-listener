@@ -216,7 +216,7 @@ private:
      * constructed yet.
      */
     Log_event_header *m_waiting_event;
-    Log_event_header m_log_event_header;
+
     /**
      * A ring buffer used to dispatch aggregated events to the user application
      */

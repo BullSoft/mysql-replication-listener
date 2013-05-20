@@ -407,10 +407,12 @@ void Converter::to(std::string &str, const Value &val) const
       return;
     case MYSQL_TYPE_BIT:
     case MYSQL_TYPE_NEWDECIMAL:
+      str = "not implemented";
+      return;
     case MYSQL_TYPE_ENUM:
     case MYSQL_TYPE_SET:
-      str = "not implemented";
-      return ;
+      os << (val.length() == 1 ? static_cast<int>(val.as_int8()) : val.as_int16());
+      break;
     case MYSQL_TYPE_TINY_BLOB:
     case MYSQL_TYPE_MEDIUM_BLOB:
     case MYSQL_TYPE_LONG_BLOB:
@@ -502,10 +504,8 @@ void Converter::to(long long &out, const Value &val) const
 	      out= 0;
 	      break;
 	    case MYSQL_TYPE_ENUM:
-	      out= 0;
-	      break;
-	    case MYSQL_TYPE_SET:
-	      out= 0;
+        case MYSQL_TYPE_SET:
+          out = (val.length() == 1 ? static_cast<int>(val.as_int8()) : val.as_int16());
 	      break;
 	    case MYSQL_TYPE_TINY_BLOB:
 	    case MYSQL_TYPE_MEDIUM_BLOB:
@@ -593,10 +593,8 @@ void Converter::to(long &out, const Value &val) const
       out= 0;
       break;
     case MYSQL_TYPE_ENUM:
-      out= 0;
-      break;
     case MYSQL_TYPE_SET:
-      out= 0;
+      out = (val.length() == 1 ? static_cast<int>(val.as_int8()) : val.as_int16());
       break;
     case MYSQL_TYPE_TINY_BLOB:
     case MYSQL_TYPE_MEDIUM_BLOB:
