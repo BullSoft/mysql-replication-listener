@@ -43,6 +43,7 @@ namespace mysql {
 int calc_field_size(unsigned char column_type, const unsigned char *field_ptr,
                     uint16_t metadata);
 
+uint8_t calc_newdecimal_size(uint8_t m, uint8_t d);
 
 /**
  * A value object class which encapsluate a tuple (value type, metadata, storage)

@@ -25,6 +25,34 @@ using namespace mysql;
 using namespace mysql::system;
 namespace mysql {
 
+// calculate mysql NEW DECIMAL digits's size in bytes
+static uint8_t calc_digits_size(uint8_t digits)
+{
+    uint8_t size = 0;
+
+    while (digits > 9) {
+        digits -= 9;
+        size   += 4;
+    }
+    if (digits >=7) {
+        size   += 4;
+    } else if (digits >= 5 && digits <= 6) {
+        size   += 3;
+    } else if (digits >= 3 && digits <= 4) {
+        size   += 2;
+    } else if (digits >= 1 && digits <= 2) {
+        size   += 1;
+    }
+
+    return size;
+}
+
+uint8_t calc_newdecimal_size(uint8_t m, uint8_t d)
+{
+    // (m - d) is left digits
+    return calc_digits_size(m-d) + calc_digits_size(d);
+}
+
 int calc_field_size(unsigned char column_type, const unsigned char *field_ptr, uint16_t metadata)
 {
   uint32_t length;
@@ -32,12 +60,12 @@ int calc_field_size(unsigned char column_type, const unsigned char *field_ptr, u
   switch (column_type) {
   case mysql::system::MYSQL_TYPE_VAR_STRING:
     /* This type is hijacked for result set types. */
-    length= metadata;
+    length = metadata;
     break;
   case mysql::system::MYSQL_TYPE_NEWDECIMAL:
-    //length= my_decimal_get_binary_size(metadata_ptr[col] >> 8,
-    //                                   metadata_ptr[col] & 0xff);
-    length= 0;
+    // higher byte is number of digits to the right of the decimal point
+    // lower byte is the maximum number of digits
+    length = calc_newdecimal_size(metadata & 0xff, metadata >> 8);
     break;
   case mysql::system::MYSQL_TYPE_DECIMAL:
   case mysql::system::MYSQL_TYPE_FLOAT:
@@ -69,7 +97,7 @@ int calc_field_size(unsigned char column_type, const unsigned char *field_ptr, u
   }
   case mysql::system::MYSQL_TYPE_YEAR:
   case mysql::system::MYSQL_TYPE_TINY:
-    length= 1;
+    length = 1;
     break;
   case mysql::system::MYSQL_TYPE_SHORT:
     length= 2;
@@ -320,6 +348,10 @@ void Converter::to(std::string &str, const Value &val) const
 {
   if (val.is_null())
   {
+    str = "NULL";
+    return;
+  }
+  if (!val.storage()) {
     str = "NULL";
     return;
   }

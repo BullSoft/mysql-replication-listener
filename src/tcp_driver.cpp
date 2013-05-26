@@ -279,7 +279,11 @@ void Binlog_tcp_driver::start_binlog_dump(const std::string &binlog_file_name, s
   if (!m_event_loop) {
       this->thread_data->tcp_driver = this;
       m_event_loop = (pthread_t *)malloc(sizeof(pthread_t));
-      pthread_create(m_event_loop, NULL, &Binlog_tcp_driver::start, (void *)this->thread_data);
+      pthread_attr_t attr;
+      pthread_attr_init(&attr);
+      pthread_attr_setdetachstate(&attr,
+                                  PTHREAD_CREATE_JOINABLE);
+      pthread_create(m_event_loop, &attr, &Binlog_tcp_driver::start, (void *)this->thread_data);
   }
 }
 
@@ -332,6 +336,10 @@ void Binlog_tcp_driver::handle_net_packet(const asio::error_code& err, std::size
   }
 
   //assert(m_waiting_event != 0);
+  if (!m_waiting_event) {
+      return;
+  }
+
   //std::cerr << "Committing '"<< bytes_transferred << "' bytes to the event stream." << std::endl;
   m_event_stream_buffer.commit(bytes_transferred);
   /*

@@ -156,6 +156,8 @@ public:
      */
     Log_event_header *header() { return &m_header; }
 
+    virtual bool is_valid() const { return true; }
+
 private:
     Log_event_header m_header;
 };
@@ -171,6 +173,8 @@ public:
 
     std::string db_name;
     std::string query;
+
+    bool is_valid() const { return query.length() != 0; }
 };
 
 class Rotate_event: public Binary_log_event
