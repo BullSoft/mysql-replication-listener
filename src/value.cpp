@@ -144,9 +144,9 @@ int calc_field_size(unsigned char column_type, const unsigned char *field_ptr, u
   }
   case mysql::system::MYSQL_TYPE_VARCHAR:
   {
-    length= metadata > 255 ? 2 : 1;
+    length  = metadata > 255 ? 2 : 1;
 
-    length+= length == 1 ? (uint32_t) *field_ptr : *((uint16_t *)field_ptr);
+    length += length == 1 ? *((uint8_t *)field_ptr) : *((uint16_t *)field_ptr);
 
     break;
   }
@@ -282,8 +282,8 @@ int32_t Value::as_int32() const
   {
     return 0;
   }
-  uint32_t to_int;
-  Protocol_chunk<uint32_t> prot_integer(to_int);
+  int32_t to_int;
+  Protocol_chunk<int32_t> prot_integer(to_int);
 
   buffer_source buff(m_storage, m_size);
   buff >> prot_integer;
