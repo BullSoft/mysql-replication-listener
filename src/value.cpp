@@ -390,8 +390,22 @@ void Converter::to(std::string &str, const Value &val) const
       str = "not implemented";
       return;
     case MYSQL_TYPE_DATE:
-      str = "not implemented";
-      return;
+      {
+      const char *storage = val.storage();
+      uint32_t date       = (storage[0] & 0xff) + ((storage[1] & 0xff) << 8) + ((storage[2] & 0xff) << 16);
+      // actually date occupies 3 bytes, so below will work
+      uint16_t year       = date >> 9;
+      date -= (year << 9);
+      uint16_t month      = date >> 5;
+      date -= (month << 5);
+      uint16_t day        = date;
+      os << std::setfill('0') << std::setw(4) << year
+         << std::setw(1) << '-'
+         << std::setw(2) << month
+         << std::setw(1) << '-'
+         << std::setw(2) << day;
+      break;
+      }
     case MYSQL_TYPE_DATETIME:
       {
       uint64_t timestamp= val.as_int64();
