@@ -173,8 +173,11 @@ tcp::socket *sync_connect_and_authenticate(asio::io_service &io_service, const s
   Protocol_chunk<uint8_t> prot_command(COM_REGISTER_SLAVE);
   Protocol_chunk<uint16_t> prot_connection_port(port);
   Protocol_chunk<uint32_t> prot_rpl_recovery_rank(0);
-  Protocol_chunk<uint32_t> prot_server_id(1);
-  Protocol_chunk<uint32_t> prot_master_server_id(1);
+  Protocol_chunk<uint32_t> prot_server_id(1); // slave server-id
+  /*
+   * See document at http://dev.mysql.com/doc/internals/en/replication-protocol.html
+   */
+  Protocol_chunk<uint32_t> prot_master_server_id(0);
 
   Protocol_chunk<uint8_t> prot_report_host_strlen(host.size());
   Protocol_chunk<uint8_t> prot_user_strlen(user.size());
