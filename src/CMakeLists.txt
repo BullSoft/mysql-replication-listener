@@ -19,7 +19,7 @@ add_library(replication_shared SHARED ${replication_sources})
 target_link_libraries(replication_shared crypto pthread)
 
 set_target_properties(replication_shared PROPERTIES
-  VERSION 0.1 SOVERSION 1
+  VERSION ${MySQL_BINLOG_VERSION} SOVERSION 2
   OUTPUT_NAME "replication")
 
 install(TARGETS replication_shared LIBRARY DESTINATION lib)
