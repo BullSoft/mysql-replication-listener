@@ -52,12 +52,20 @@ typedef struct st_decimal_t {
   decimal_digit_t *buf;
 } decimal_t;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int decimal_bin_size(int precision, int scale);
 int decimal2string(const decimal_t *from, char *to, int *to_len,
                    int fixed_precision, int fixed_decimals,
                    char filler);
 
 int bin2decimal(const u_char *from, decimal_t *to, int precision, int scale);
+
+#ifdef __cplusplus
+}
+#endif
 
 #define E_DEC_OK                0
 #define E_DEC_TRUNCATED         1
